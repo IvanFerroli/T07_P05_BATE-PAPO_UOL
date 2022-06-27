@@ -31,8 +31,8 @@ function catchError(error) {
 }
 
 function startApp() {
-  getMessages();
-  setInterval(remainConnected, 1000);
+    setInterval(getMessages, 3000);
+  setInterval(remainConnected, 5000);
 }
 
 function getMessages() {
