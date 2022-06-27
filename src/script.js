@@ -1,12 +1,15 @@
 const messagesContainer = document.querySelector("main");
-let userName;
+var entryInput = null;
+let userName = null;
 
 function login() {
-    let userName = document.querySelector(".login-screen input").value;
+    let entryInput = document.querySelector(".login-screen input");
+  let name = entryInput.value;
+  userName = name;
   let userNamePostObject = {
-    name: userName,
+    name: name,
   };
-  if (userName != null && userName != undefined && userName != "") {
+  if (name != null && name != undefined && name != "") {
     const promise = axios
       .post(
         "https://mock-api.driven.com.br/api/v6/uol/participants",
@@ -57,8 +60,9 @@ function scrollIntoView() {
   toView.scrollIntoView();
 }
 
-function loadMessages(answer) {
-  let userName = document.querySelector(".login-screen input").value;
+function loadMessages(answer) {let entryInput = document.querySelector(".login-screen input");
+let name = entryInput.value;
+userName = name;
   messagesContainer.innerHTML = "";
   for (i = 0; i < answer.data.length; i++) {
     let type = answer.data[i].type;
@@ -67,7 +71,7 @@ function loadMessages(answer) {
     let to = answer.data[i].to;
     let text = answer.data[i].text;
 
-    if (to == "Todos" || to == userName || from == userName) {
+    if (to == "Todos" || to == name || from == name) {
       var renderedMessage = `
         <div class="message-box ${type}">
             <div class="message-inner-container">
@@ -86,7 +90,9 @@ function loadMessages(answer) {
 }
 
 function remainConnected() {
-  let name = document.querySelector(".login-screen input").value;
+    let entryInput = document.querySelector(".login-screen input");
+    let name = entryInput.value;
+    userName = name;
   let userNamePostObject = {
     name: `${name}`,
   };
@@ -104,8 +110,10 @@ function remainConnected() {
 }
 
 function sendMessage() {
-    let userName = document.querySelector(".login-screen input").value;
-    let from = userName;
+    let entryInput = document.querySelector(".login-screen input");
+  let name = entryInput.value;
+  userName = name;
+    let from = name;
     let to = "Todos";
     let text = document.querySelector("footer input").value;
     let type = "message";
