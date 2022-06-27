@@ -65,10 +65,13 @@ main {
   width: calc(100% - 16px);
   max-height: fit-content;
 }
+.text{
+  word-break: break-all;
+}
 .status {
   background: #dcdcdc;
 }
-.public-message {
+.message {
   background: #ffffff;
 }
 .private-message {
