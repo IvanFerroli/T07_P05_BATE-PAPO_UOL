@@ -11,12 +11,25 @@ function login(){
     let userNamePostObject = {
         name: userName
     }
-    let loginScreen = document.querySelector(".login-screen")
     if(userName != ""){
-        loginScreen.classList.add("hidden")
         const promisse = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', userNamePostObject)
-        startApp()
+        .then(() => {
+            startApp();
+            hideLoginScreen()
+        })
+        .catch(() => {
+            catchError()
+        })
     }
+}
+
+function hideLoginScreen(){
+    let loginScreen = document.querySelector(".login-screen")
+    loginScreen.classList.add("hidden")
+}
+
+function catchError(error){
+    alert("Algo deu errado, por favor tente novamente.")
 }
 
 function startApp() {
