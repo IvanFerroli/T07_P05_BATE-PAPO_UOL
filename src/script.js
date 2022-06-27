@@ -1,11 +1,12 @@
 const messagesContainer = document.querySelector("main");
+let userName;
 
 function login() {
-  let userName = document.querySelector(".login-screen input").value;
+    let userName = document.querySelector(".login-screen input").value;
   let userNamePostObject = {
     name: userName,
   };
-  if (userName != "") {
+  if (userName != null && userName != undefined && userName != "") {
     const promise = axios
       .post(
         "https://mock-api.driven.com.br/api/v6/uol/participants",
@@ -18,6 +19,8 @@ function login() {
       .catch(() => {
         catchError();
       });
+  } else {
+    alert("Por favor, digite um nome válido");
   }
 }
 
@@ -31,6 +34,12 @@ function catchError(error) {
 }
 
 function startApp() {
+  getMessages();
+  remainConnected();
+  interval();
+}
+
+function interval() {
     setInterval(getMessages, 3000);
   setInterval(remainConnected, 5000);
 }
@@ -50,7 +59,6 @@ function scrollIntoView() {
 
 function loadMessages(answer) {
   let userName = document.querySelector(".login-screen input").value;
-  var name = userName.value;
   messagesContainer.innerHTML = "";
   for (i = 0; i < answer.data.length; i++) {
     let type = answer.data[i].type;
@@ -59,7 +67,7 @@ function loadMessages(answer) {
     let to = answer.data[i].to;
     let text = answer.data[i].text;
 
-    if (to == "Todos" || to == name || from == name) {
+    if (to == "Todos" || to == userName || from == userName) {
       var renderedMessage = `
         <div class="message-box ${type}">
             <div class="message-inner-container">
@@ -78,14 +86,49 @@ function loadMessages(answer) {
 }
 
 function remainConnected() {
-  let userName = document.querySelector(".login-screen input").value;
+  let name = document.querySelector(".login-screen input").value;
   let userNamePostObject = {
-    name: userName,
+    name: `${name}`,
   };
+
   const promise = axios
     .post(
       "https://mock-api.driven.com.br/api/v6/uol/status",
       userNamePostObject
     )
-    .then(console.log("status: online"));
+    .then(console.log("status: online"))
+    .catch(() => {
+      alert("Você foi desconectado do servidor, por favor, entre novamente.");
+      window.location.reload();
+    });
 }
+
+function sendMessage() {
+    let userName = document.querySelector(".login-screen input").value;
+    let from = userName;
+    let to = "Todos";
+    let text = document.querySelector("footer input").value;
+    let type = "message";
+  
+    let messagePostObject = {
+      from: `${from}`,
+      to: `${to}`,
+      text: `${text}`,
+      type: `${type}`,
+    };
+  
+    const messagePost = axios.post(
+      "https://mock-api.driven.com.br/api/v6/uol/messages",
+      messagePostObject
+    );
+  
+    document.querySelector(".login-screen input").value = "";
+    messagePost.then(loadMessages);
+  }
+  
+  const inputMessage = document.querySelector("footer input");
+  inputMessage.addEventListener("keydown", function (event) {
+    if (event.code === "Enter") {
+      sendMessage();
+    }
+  });
